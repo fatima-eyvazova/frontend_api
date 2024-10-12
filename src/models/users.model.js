@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ProductSchema } from "./product.model.js";
 
 const UserSchema = mongoose.Schema(
   {
@@ -37,6 +38,7 @@ const UserSchema = mongoose.Schema(
     basket: {
       type: String,
     },
+    favorites: [ProductSchema],
   },
   {
     versionKey: false,

@@ -12,11 +12,28 @@ export const createClient = async (data, organizationId) => {
 
   let hashedPaswword = await encryptPassword(data.password);
   data._id = randomId();
-   data.organizationId = organizationId;
+  data.organizationId = organizationId;
   data.role = "client";
   data.password = hashedPaswword;
   const user = new Users(data);
   await user.save();
   return user;
+};
 
+export const addToFavorites = (userId, product) => {
+  return Users.findOneAndUpdate(
+    { _id: userId },
+    { $addToSet: { favorites: { ...product, _id: product._id } } }
+  );
+};
+
+export const removeFromFavorites = (userId, productId) => {
+  return Users.findOneAndUpdate(
+    { _id: userId },
+    {
+      $pull: {
+        favorites: { _id: productId },
+      },
+    }
+  );
 };

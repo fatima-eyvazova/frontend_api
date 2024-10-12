@@ -27,11 +27,11 @@ export const DashboardRouter = express.Router({
   mergeParams: true,
 });
 DashboardRouter.post("/register", register);
-//Brands
-DashboardRouter.post("/brands", addNewBrand);
-DashboardRouter.get("/brands", getAllBrands);
-DashboardRouter.put("/brands/:brand_id", updateBrand);
-DashboardRouter.delete("/brands/:brand_id", deleteBrand);
+//Category
+DashboardRouter.post("/categories", addNewBrand);
+DashboardRouter.get("/categories", getAllBrands);
+DashboardRouter.put("/categories/:category_id", updateBrand);
+DashboardRouter.delete("/categories/:category_id", deleteBrand);
 //Products
 DashboardRouter.post("/products", addNewProduct);
 DashboardRouter.get("/products", getAllProducts);

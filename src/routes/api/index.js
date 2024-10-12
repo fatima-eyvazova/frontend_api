@@ -11,4 +11,4 @@ export const ApiRouter = express.Router({
 ApiRouter.use("/site", SiteRouter);
 ApiRouter.use("/dashboard", checkAuth, DashboardRouter);
 ApiRouter.post("/login", Login);
-ApiRouter.get("/profile",checkAuth, profile);
+ApiRouter.get("/profile", checkAuth, profile);

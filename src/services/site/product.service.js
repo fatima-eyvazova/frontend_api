@@ -65,7 +65,9 @@ export const getAll = async (req) => {
             {
               $and: [
                 { salePrice: { $exists: false } },
-                { productPrice: { $gt: minPrice ? minPrice : 0, $lt: maxPrice } },
+                {
+                  productPrice: { $gt: minPrice ? minPrice : 0, $lt: maxPrice },
+                },
               ],
             },
           ],
@@ -90,4 +92,19 @@ export const getAll = async (req) => {
 export const getSingle = async (_id, organizationId) => {
   const product = await Products.findOne({ _id, organizationId });
   return product;
+};
+
+export const addFeedback = (
+  productId,
+  { review = "", avgRating, overallRatingPoints, overallRatingCount }
+) => {
+  return Products.findOneAndUpdate(
+    { _id: productId },
+    {
+      review,
+      avgRating,
+      overallRatingCount,
+      overallRatingPoints,
+    }
+  );
 };

@@ -59,10 +59,13 @@ export const Login = catcher(async (req, res, next) => {
   );
 });
 export const profile = catcher(async (req, res, next) => {
+  const data = { ...req.user?._doc };
+  delete data.password;
+
   res.json(
     new Response({
       data: {
-        user: req.user,
+        user: data,
       },
     })
   );

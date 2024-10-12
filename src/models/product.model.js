@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ProductSchema = mongoose.Schema(
+export const ProductSchema = mongoose.Schema(
   {
     _id: {
       required: true,
@@ -48,6 +48,24 @@ const ProductSchema = mongoose.Schema(
     images: {
       type: [{}],
       required: true,
+    },
+    rating: {
+      avgRating: {
+        type: Number,
+        default: 0,
+      },
+      overallRatingPoints: {
+        type: Number,
+        default: 0,
+      },
+      overallRatingCount: {
+        type: Number,
+        default: 0,
+      },
+    },
+    review: {
+      type: String,
+      required: false,
     },
   },
   {
