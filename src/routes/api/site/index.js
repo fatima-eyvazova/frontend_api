@@ -4,6 +4,7 @@ import {
   addRemoveFavorite,
   getAllProducts,
   getSingleProduct,
+  giveFeedback,
 } from "../../../controllers/site/products.controller.js";
 import { getAllBrands } from "../../../controllers/site/brands.controller.js";
 import {
@@ -24,7 +25,7 @@ SiteRouter.post("/register", register);
 SiteRouter.get("/products", getAllProducts);
 SiteRouter.get("/products/:product_id", getSingleProduct);
 SiteRouter.put("/products/favorites", checkAuth, addRemoveFavorite);
-SiteRouter.put("/products/feedback", checkAuth);
+SiteRouter.put("/products/feedback", checkAuth, giveFeedback);
 SiteRouter.get("/categories", getAllBrands);
 
 SiteRouter.get("/basket", checkAuth, getBasket);

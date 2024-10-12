@@ -96,15 +96,20 @@ export const getSingle = async (_id, organizationId) => {
 
 export const addFeedback = (
   productId,
-  { review = "", avgRating, overallRatingPoints, overallRatingCount }
+  review = "",
+  avgRating,
+  overallRatingPoints,
+  overallRatingCount
 ) => {
   return Products.findOneAndUpdate(
     { _id: productId },
     {
-      review,
-      avgRating,
-      overallRatingCount,
-      overallRatingPoints,
+      $set: {
+        review,
+        "rating.avgRating": avgRating,
+        "rating.overallRatingCount": overallRatingCount,
+        "rating.overallRatingPoints": overallRatingPoints,
+      },
     }
   );
 };

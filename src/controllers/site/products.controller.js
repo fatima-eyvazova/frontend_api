@@ -74,7 +74,7 @@ export const giveFeedback = catcher(async (req, res) => {
 
   const newOverallRatingPoints = overallRatingPoints + rating;
   const newCount = overallRatingCount + 1;
-  const newAvg = newOverallRatingPoints / overallRatingCount;
+  const newAvg = newOverallRatingPoints / newCount;
   const updated = await addFeedback(
     product_id,
     review,
