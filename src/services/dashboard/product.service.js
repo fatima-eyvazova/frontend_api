@@ -19,7 +19,7 @@ export const getAll = async (req) => {
     search = "",
     isDeal,
     isPublish,
-    brandId,
+    categoryId,
     stock,
   } = req.query;
   let skip = (page - 1) * perPage;
@@ -32,7 +32,7 @@ export const getAll = async (req) => {
       : {}),
     ...(isDeal ? { isDeal } : {}),
     ...(isPublish ? { isPublish } : {}),
-    ...(brandId ? { brandId } : {}),
+    ...(categoryId ? { categoryId } : {}),
     ...(search
       ? {
           $or: [
@@ -66,7 +66,9 @@ export const getAll = async (req) => {
             {
               $and: [
                 { salePrice: { $exists: false } },
-                { productPrice: { $gt: minPrice ? minPrice : 0, $lt: maxPrice } },
+                {
+                  productPrice: { $gt: minPrice ? minPrice : 0, $lt: maxPrice },
+                },
               ],
             },
           ],

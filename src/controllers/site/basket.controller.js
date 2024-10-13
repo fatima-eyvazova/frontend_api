@@ -11,11 +11,13 @@ import { Response } from "../../utils/response.utils.js";
 
 export const getBasket = catcher(async (req, res, next) => {
   const data = await getAll(req);
-  res.status(200).json(
-    new Response({
-      data,
-    })
-  );
+  if (data) {
+    return res.status(200).json(
+      new Response({
+        data,
+      })
+    );
+  }
 });
 export const addNewProductToBasket = catcher(async (req, res, next) => {
   const { basket } = req.body;

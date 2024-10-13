@@ -29,7 +29,7 @@ export const ProductSchema = mongoose.Schema(
       type: Number,
       required: false,
     },
-    brandId: {
+    categoryId: {
       type: String,
       required: true,
     },
