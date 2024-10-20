@@ -10,13 +10,20 @@ const BasketSchema = mongoose.Schema(
       required: true,
       type: String,
     },
-    productId: {
+    products: {
+      type: [
+        {
+          productId: {
+            required: true,
+            type: String,
+          },
+          productCount: {
+            required: true,
+            type: Number,
+          },
+        },
+      ],
       required: true,
-      type: String,
-    },
-    productCount: {
-      required: true,
-      type: Number,
     },
     organizationId: {
       unique: false,

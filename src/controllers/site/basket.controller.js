@@ -1,60 +1,80 @@
 import { Baskets } from "../../models/basket.model.js";
 import { Products } from "../../models/product.model.js";
-import {
-  create,
-  getAll,
-  remove,
-  update,
-} from "../../services/site/basket.service.js";
+import { create, remove, update } from "../../services/site/basket.service.js";
 import { catcher } from "../../utils/catcher.utils.js";
 import { Response } from "../../utils/response.utils.js";
 
-export const getBasket = catcher(async (req, res, next) => {
-  const data = await getAll(req);
-  if (data) {
-    return res.status(200).json(
-      new Response({
-        data,
-      })
-    );
-  }
-});
-export const addNewProductToBasket = catcher(async (req, res, next) => {
-  const { basket } = req.body;
+export const getBasket = catcher(async (req, res) => {
+  const basket = await Baskets.findOne({ userId: req.user?.id });
   if (!basket) {
-    throw new Error("Basket field is required");
+    return res.status(404).json("Basket was not found.");
   }
-  let mapedArr = req.body.basket.map((item) => {
-    return Baskets.findOne({
-      productId: item.productId,
-      userId: req.user._id,
-    });
+
+  const productInfos = [];
+  for (const pr of basket?.products) {
+    const productInfo = await Products.findOne({ _id: pr?.productId });
+    const prInfo = JSON.parse(JSON.stringify(productInfo));
+    prInfo.productCount = pr?.productCount;
+    productInfos.push(prInfo);
+  }
+
+  const doc = { ...basket._doc };
+  doc.products = productInfos;
+  res.status(200).json(doc);
+});
+
+export const addNewProductToBasket = catcher(async (req, res) => {
+  const { userId, productId, productCount } = req.body;
+  if (!userId || !productId) {
+    throw new Error("userId and productId fields are required");
+  }
+
+  if (productCount < 0 || !Number.isInteger(productCount)) {
+    throw new Error("incorrect productCount");
+  }
+
+  const foundedBasket = await Baskets.findOne({
+    userId,
   });
-  let isExist = await Promise.all(mapedArr);
-  if (isExist.filter((item) => item).length > 0) {
-    throw new Error(
-      `The product called ${
-        isExist.filter((item) => item)[0].productId
-      } is already added`
+
+  if (foundedBasket) {
+    const foundProductInBasket = foundedBasket.products.find(
+      (pr) => pr?.productId === productId
+    );
+    if (foundProductInBasket) {
+      const data = await update(
+        foundedBasket._id,
+        productId,
+        productCount,
+        true
+      );
+      return res.json(
+        new Response({
+          data,
+        })
+      );
+    }
+
+    const data = await update(
+      foundedBasket._id,
+      productId,
+      productCount,
+      false
+    );
+    return res.json(
+      new Response({
+        data: {
+          data: data.modifiedCount ? "Basket updated successfully" : data,
+        },
+      })
     );
   }
 
   const data = await create(req);
+
   res.json(
     new Response({
       data: data,
-    })
-  );
-});
-
-export const updateBasket = catcher(async (req, res, next) => {
-  const { basket_id } = req.params;
-  const data = await update(req.body, basket_id);
-  res.json(
-    new Response({
-      data: {
-        data: data.modifiedCount ? "Basket updated successfully" : data,
-      },
     })
   );
 });

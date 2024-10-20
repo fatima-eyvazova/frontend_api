@@ -111,7 +111,6 @@ export const update = async (data, _id) => {
       return item;
     }
   });
-  console.log(tempArr);
   let deletedFiles = diffArr.map((item) => deleteFile(item));
   let uploadedFiles = newFiles.map((item) => addFile(item, "products"));
   let generalArr = [...deletedFiles, ...uploadedFiles];

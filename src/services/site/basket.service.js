@@ -2,23 +2,26 @@ import { v1 as randomId } from "uuid";
 import { Baskets } from "../../models/basket.model.js";
 import { Products } from "../../models/product.model.js";
 import { getSingle } from "./product.service.js";
+import { Types } from "mongoose";
 
 export const create = async (req) => {
-  const { basket } = req.body;
+  const { productId, productCount } = req.body;
 
-  const costomData = basket.map(({ productCount, productId }) => {
-    return {
-      _id: randomId(),
-      userId: req.user._id,
-      organizationId: req.organizationId,
-      productId,
-      productCount,
-    };
-  });
+  const payload = {
+    _id: randomId(),
+    userId: req.user._id,
+    organizationId: req.organizationId,
+    products: [
+      {
+        productId,
+        productCount,
+      },
+    ],
+  };
 
-  const product = await Baskets.insertMany(costomData);
-
-  return product;
+  const basket = new Baskets(payload);
+  basket.save();
+  return basket;
 };
 
 export const getAll = async (req) => {
@@ -49,14 +52,41 @@ export const getAll = async (req) => {
   return res;
 };
 
-export const update = async (data, _id) => {
-  const basket = await Baskets.updateOne({ _id }, data);
-  return basket;
+export const update = async (id, productId, productCount, isInBasket) => {
+  if (productCount === 0) {
+    return Baskets.updateOne(
+      { _id: id },
+      {
+        $pull: {
+          products: { productId },
+        },
+      }
+    );
+  }
+
+  if (isInBasket) {
+    return Baskets.updateOne(
+      { _id: id, "products.productId": productId },
+      {
+        $set: {
+          "products.$.productCount": productCount,
+        },
+      }
+    );
+  }
+
+  return Baskets.updateOne(
+    { _id: id },
+    {
+      $push: {
+        products: { productId, productCount },
+      },
+    }
+  );
 };
 
 export const remove = async (_id) => {
   const { deletedCount } = await Baskets.deleteOne({ _id });
-  console.log(deletedCount);
   if (deletedCount) {
     return "Basket deleted successfully";
   }
