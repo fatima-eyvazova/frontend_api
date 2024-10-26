@@ -2,6 +2,7 @@ import { Users } from "../../models/users.model.js";
 import {
   addFeedback,
   getAll,
+  getReviews,
   getSingle,
 } from "../../services/site/product.service.js";
 import {
@@ -19,6 +20,7 @@ export const getAllProducts = catcher(async (req, res, next) => {
     })
   );
 });
+
 export const getSingleProduct = catcher(async (req, res, next) => {
   const { product_id } = req.params;
   const data = await getSingle(product_id, req.organizationId);
@@ -74,7 +76,7 @@ export const giveFeedback = catcher(async (req, res) => {
 
   const newOverallRatingPoints = overallRatingPoints + rating;
   const newCount = overallRatingCount + 1;
-  const newAvg = newOverallRatingPoints / newCount;
+  const newAvg = Math.round(newOverallRatingPoints / newCount);
   const updated = await addFeedback(
     product_id,
     review,
@@ -83,11 +85,24 @@ export const giveFeedback = catcher(async (req, res) => {
     newCount
   );
 
-  if (!updated) {
+  if (!updated.updated || !updated.review) {
     return res
       .status(404)
       .json({ message: "Product update was not successful!" });
   }
 
   res.status(200).json({ message: "Product update was successful!" });
+});
+
+export const getReviewsByProductId = catcher(async (req, res) => {
+  const productId = req.params.id;
+  if (!productId) {
+    res.status(404).json({ message: "Product id is required" });
+  }
+  const data = await getReviews(productId);
+  res.status(200).json(
+    new Response({
+      data,
+    })
+  );
 });

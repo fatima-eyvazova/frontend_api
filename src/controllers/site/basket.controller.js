@@ -79,9 +79,8 @@ export const addNewProductToBasket = catcher(async (req, res) => {
   );
 });
 
-export const deleteBasket = catcher(async (req, res, next) => {
-  const { basket_id } = req.params;
-  let data = await remove(basket_id);
+export const deleteBasket = catcher(async (req, res) => {
+  let data = await remove(req.user._id);
   res.json(
     new Response({
       data,

@@ -85,8 +85,8 @@ export const update = async (id, productId, productCount, isInBasket) => {
   );
 };
 
-export const remove = async (_id) => {
-  const { deletedCount } = await Baskets.deleteOne({ _id });
+export const remove = async (userId) => {
+  const deletedCount = await Baskets.findOneAndDelete({ userId });
   if (deletedCount) {
     return "Basket deleted successfully";
   }

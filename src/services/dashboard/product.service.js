@@ -111,16 +111,21 @@ export const update = async (data, _id) => {
       return item;
     }
   });
-  let deletedFiles = diffArr.map((item) => deleteFile(item));
+  let deletedFiles = diffArr.map((item) => deleteFile(item)) || [];
   let uploadedFiles = newFiles.map((item) => addFile(item, "products"));
+
   let generalArr = [...deletedFiles, ...uploadedFiles];
-  let all = await Promise.all(generalArr);
+  let all = await Promise.allSettled(generalArr);
+
   let newArr = all
-    .filter((item) => item.public_id)
-    .map(({ public_id, url }) => {
+    .filter((item) => item.value?.public_id)
+    .map(({ value: { public_id, url } }) => {
       return { public_id, url };
     });
+  console.log(tempArr);
+
   data.images = [...newArr, ...tempArr];
+
   const newProduct = await Products.updateOne({ _id }, data);
   return newProduct;
 };

@@ -15,7 +15,11 @@ export const addNewProduct = catcher(async (req, res, next) => {
   if (images.length > 4) {
     throw new Error("There can be a maximum of 4 photos of the product");
   }
+  console.log({ images });
+
   let fileArr = images.map((item) => addFile(item, "products"));
+  console.log({ fileArr });
+
   let uploadedImgs = await Promise.all(fileArr);
   uploadedImgs = uploadedImgs.map(({ url, public_id }) => ({
     url,
@@ -29,7 +33,7 @@ export const addNewProduct = catcher(async (req, res, next) => {
   const data = await create(costomData);
   res.json(
     new Response({
-   data
+      data,
     })
   );
 });
@@ -37,10 +41,11 @@ export const getAllProducts = catcher(async (req, res, next) => {
   const data = await getAll(req);
   res.status(200).json(
     new Response({
-   data
+      data,
     })
   );
 });
+
 export const updateProduct = catcher(async (req, res, next) => {
   const { product_id } = req.params;
   const { images } = req.body;
@@ -56,6 +61,7 @@ export const updateProduct = catcher(async (req, res, next) => {
     })
   );
 });
+
 export const deleteProduct = catcher(async (req, res, next) => {
   const { product_id } = req.params;
   const product = await getSingle(product_id, req.organizationId);
@@ -64,7 +70,7 @@ export const deleteProduct = catcher(async (req, res, next) => {
   let data = await remove(product._id);
   res.json(
     new Response({
-    data
+      data,
     })
   );
 });

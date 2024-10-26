@@ -21,7 +21,6 @@ export const create = async (data) => {
     } else {
       total += item.productPrice * data.products[i].productCount;
     }
-    console.log(total);
     if (item.stock - data.products[i].productCount >= 0) {
       return {
         stock: item.stock - data.products[i].productCount,

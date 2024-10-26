@@ -1,5 +1,6 @@
 import { v1 as randomId } from "uuid";
 import { Products } from "../../models/product.model.js";
+import { ProductReviews } from "../../models/review.model.js";
 
 export const create = async (data) => {
   data._id = randomId();
@@ -19,8 +20,10 @@ export const getAll = async (req) => {
     isPublish,
     categoryId,
     stock,
+    rating,
   } = req.query;
   let skip = (page - 1) * perPage;
+  const ratings = rating?.split(",");
 
   let costomQuery = {
     organizationId: req.organizationId,
@@ -73,6 +76,11 @@ export const getAll = async (req) => {
           ],
         }
       : {}),
+    ...(rating
+      ? {
+          "rating.avgRating": { $in: ratings },
+        }
+      : {}),
   };
 
   const product = await Products.find(costomQuery, {
@@ -94,22 +102,35 @@ export const getSingle = async (_id, organizationId) => {
   return product;
 };
 
-export const addFeedback = (
+export const addFeedback = async (
   productId,
   review = "",
   avgRating,
   overallRatingPoints,
   overallRatingCount
 ) => {
-  return Products.findOneAndUpdate(
+  const updated = await Products.findOneAndUpdate(
     { _id: productId },
     {
       $set: {
-        review,
         "rating.avgRating": avgRating,
         "rating.overallRatingCount": overallRatingCount,
         "rating.overallRatingPoints": overallRatingPoints,
       },
     }
   );
+
+  const id = randomId();
+  const rev = new ProductReviews({
+    _id: id,
+    description: review,
+    productId,
+  });
+  await rev.save();
+
+  return { updated, review: rev };
+};
+
+export const getReviews = async (productId) => {
+  return ProductReviews.find({ productId });
 };

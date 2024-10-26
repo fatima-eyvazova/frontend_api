@@ -10,11 +10,12 @@ const StoreSchema = mongoose.Schema(
     name: {
       required: true,
       type: String,
+      default: "Fayzelia 🛍️",
     },
-    logo: {
-      required: true,
-      type: String,
-    },
+    // logo: {
+    //   required: true,
+    //   type: String,
+    // },
     shippingOptions: {
       required: false,
       type: [String],

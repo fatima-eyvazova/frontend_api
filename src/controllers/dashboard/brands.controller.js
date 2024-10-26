@@ -14,7 +14,7 @@ export const addNewBrand = catcher(async (req, res, next) => {
   const { image, name } = req.body;
   let img = null;
   if (image) {
-    const { url, public_id } = await addFile(image, "brands");
+    const { url, public_id } = await addFile(image, "categories");
     img = { url, public_id };
   }
 
@@ -27,7 +27,7 @@ export const addNewBrand = catcher(async (req, res, next) => {
 
   res.json(
     new Response({
-     data
+      data,
     })
   );
 });
@@ -36,43 +36,44 @@ export const getAllBrands = catcher(async (req, res, next) => {
   const data = await getAll(req.organizationId);
   res.json(
     new Response({
-      data
+      data,
     })
   );
 });
 
 export const updateBrand = catcher(async (req, res, next) => {
-  const { brand_id } = req.params;
+  const { category_id } = req.params;
   const { image, name } = req.body;
-  const brand = await getSingle(brand_id, req.organizationId);
+  const category = await getSingle(category_id, req.organizationId);
   let img = null;
   if (image) {
-    if (brand.image?.public_id) {
-      await deleteFile(brand.image.public_id);
+    if (category.image?.public_id) {
+      await deleteFile(category.image.public_id);
     }
-    const { url, public_id } = await addFile(image, "brands");
+    const { url, public_id } = await addFile(image, "categories");
     img = { url, public_id };
   }
   let costomData = { name, image: img };
-  let data = await update(image ? costomData : { name }, brand._id);
+  let data = await update(image ? costomData : { name }, category._id);
   res.json(
     new Response({
       data: {
-        data: data.modifiedCount ? "Brand updated successfully" : data,
+        data: data.modifiedCount ? "Category updated successfully" : data,
       },
     })
   );
 });
 
 export const deleteBrand = catcher(async (req, res, next) => {
-  const { brand_id } = req.params;
-  const brand = await getSingle(brand_id, req.organizationId);
-  if(brand.image.public_id){
-  await deleteFile(brand?.image?.public_id);}
-  let data = await remove(brand._id);
+  const { category_id } = req.params;
+  const category = await getSingle(category_id, req.organizationId);
+  if (category.image.public_id) {
+    await deleteFile(category?.image?.public_id);
+  }
+  let data = await remove(category._id);
   res.json(
     new Response({
-     data
+      data,
     })
   );
 });

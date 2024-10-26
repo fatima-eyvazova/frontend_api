@@ -3,6 +3,7 @@ import { register } from "../../../controllers/site/auth.controller.js";
 import {
   addRemoveFavorite,
   getAllProducts,
+  getReviewsByProductId,
   getSingleProduct,
   giveFeedback,
 } from "../../../controllers/site/products.controller.js";
@@ -26,6 +27,7 @@ SiteRouter.get("/products/:product_id", getSingleProduct);
 SiteRouter.put("/products/favorites", checkAuth, addRemoveFavorite);
 SiteRouter.post("/products/feedback", checkAuth, giveFeedback);
 SiteRouter.get("/categories", getAllBrands);
+SiteRouter.get("/products/:id/reviews", getReviewsByProductId);
 
 SiteRouter.get("/basket", checkAuth, getBasket);
 SiteRouter.post("/basket", checkAuth, addNewProductToBasket);

@@ -21,7 +21,10 @@ import {
   getOrders,
   updateOrder,
 } from "../../../controllers/dashboard/orders.controller.js";
-import { updateStoreInfoController } from "../../../controllers/dashboard/storeInfo.controller.js";
+import {
+  getStoreInfoController,
+  updateStoreInfoController,
+} from "../../../controllers/dashboard/storeInfo.controller.js";
 
 export const DashboardRouter = express.Router({
   mergeParams: true,
@@ -37,6 +40,7 @@ DashboardRouter.post("/products", addNewProduct);
 DashboardRouter.get("/products", getAllProducts);
 DashboardRouter.put("/products/:product_id", updateProduct);
 DashboardRouter.delete("/products/:product_id", deleteProduct);
+
 //Users
 DashboardRouter.get("/users", protectedRoute(["superadmin"]), getAllUsers);
 DashboardRouter.delete(
@@ -49,3 +53,4 @@ DashboardRouter.get("/orders", getOrders);
 DashboardRouter.put("/orders/:orderId", updateOrder);
 
 DashboardRouter.put("/site-info", updateStoreInfoController);
+DashboardRouter.get("/site-info", getStoreInfoController);

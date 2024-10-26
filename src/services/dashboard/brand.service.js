@@ -8,7 +8,7 @@ export const create = async (data, organizationId) => {
   });
   if (isExist) {
     await deleteFile(data.image.public_id);
-    throw new Error("This brand already used");
+    throw new Error("This category already used");
   }
   data._id = randomId();
   const brand = new Brands(data);
@@ -30,7 +30,7 @@ export const getSingle = async (_id, organizationId) => {
 export const remove = async (_id) => {
   const { deletedCount } = await Brands.deleteOne({ _id });
   if (deletedCount) {
-    return "Brand deleted successfully";
+    return "Category deleted successfully";
   }
-  throw new Error("Brand could not be deleted");
+  throw new Error("Category could not be deleted");
 };

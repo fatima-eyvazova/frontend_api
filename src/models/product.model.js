@@ -63,10 +63,6 @@ export const ProductSchema = mongoose.Schema(
         default: 0,
       },
     },
-    review: {
-      type: String,
-      required: false,
-    },
   },
   {
     versionKey: false,
