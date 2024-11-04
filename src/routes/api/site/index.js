@@ -12,6 +12,7 @@ import {
   addNewProductToBasket,
   deleteBasket,
   getBasket,
+  deleteAllBasketItems,
 } from "../../../controllers/site/basket.controller.js";
 import { checkAuth } from "../../../middlewares/auth.middleware.js";
 import { addNewOrder } from "../../../controllers/site/orders.controller.js";
@@ -32,5 +33,6 @@ SiteRouter.get("/products/:id/reviews", getReviewsByProductId);
 SiteRouter.get("/basket", checkAuth, getBasket);
 SiteRouter.post("/basket", checkAuth, addNewProductToBasket);
 SiteRouter.delete("/basket/:basket_id", checkAuth, deleteBasket);
+SiteRouter.delete("/basket/allremove", checkAuth, deleteAllBasketItems);
 
 SiteRouter.post("/orders", checkAuth, addNewOrder);

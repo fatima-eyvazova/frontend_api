@@ -19,10 +19,22 @@ export const createAdmin = async (data, organizationId) => {
   await user.save();
   return user;
 };
+// export const getAll = async (organizationId) => {
+//   const users = await Users.find(
+//     {
+//       organizationId,
+//       role: "admin",
+//     },
+//     { organizationId: 0 }
+//   );
+//   return users;
+// };
+
 export const getAll = async (organizationId) => {
   const users = await Users.find(
     {
-      organizationId,role:'admin'
+      organizationId,
+      $or: [{ role: "admin" }, { role: "client" }],
     },
     { organizationId: 0 }
   );

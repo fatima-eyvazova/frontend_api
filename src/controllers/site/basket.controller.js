@@ -1,11 +1,18 @@
 import { Baskets } from "../../models/basket.model.js";
 import { Products } from "../../models/product.model.js";
-import { create, remove, update } from "../../services/site/basket.service.js";
+import {
+  create,
+  remove,
+  removeAll,
+  update,
+} from "../../services/site/basket.service.js";
 import { catcher } from "../../utils/catcher.utils.js";
 import { Response } from "../../utils/response.utils.js";
 
 export const getBasket = catcher(async (req, res) => {
   const basket = await Baskets.findOne({ userId: req.user?.id });
+  console.log("basket", basket);
+
   if (!basket) {
     return res.status(404).json("Basket was not found.");
   }
@@ -81,6 +88,17 @@ export const addNewProductToBasket = catcher(async (req, res) => {
 
 export const deleteBasket = catcher(async (req, res) => {
   let data = await remove(req.user._id);
+  res.json(
+    new Response({
+      data,
+    })
+  );
+});
+
+// new
+
+export const deleteAllBasketItems = catcher(async (req, res) => {
+  const data = await removeAll(req.user._id);
   res.json(
     new Response({
       data,

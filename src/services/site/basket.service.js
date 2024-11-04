@@ -92,3 +92,15 @@ export const remove = async (userId) => {
   }
   throw new Error("Basket could not be deleted");
 };
+
+// new remowe
+
+export const removeAll = async (userId) => {
+  const userBasket = await Baskets.findOne({ userId });
+  if (userBasket) {
+    userBasket.products = [];
+    await userBasket.save();
+    return "All items removed from basket successfully";
+  }
+  throw new Error("Basket could not be found");
+};
